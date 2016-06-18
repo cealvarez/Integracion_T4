@@ -46,7 +46,7 @@ class ApisController < ApplicationController
     request.body = "{\n    \"username\": \"mi primer bot\",\n    \"response_type\": \"ephemeral\",\n    \"text\": \""+ texto +"\"\n}\n"
     response = http.request(request)
     #puts response.read_body
-
+    return false
     respond_to do |format|
       format.html {}
       format.json { render :json => my_hash}
