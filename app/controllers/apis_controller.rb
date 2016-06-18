@@ -13,6 +13,8 @@ class ApisController < ApplicationController
   # GET /apis/1.json
   def show
     @city = params[:city]
+    puts 'Empieza el request'
+    puts params
     url = URI("http://api.openweathermap.org/data/2.5/weather?q="+@city+"&APPID=6bdf634eaccfc5088a2d84376170d08b")
     http = Net::HTTP.new(url.host, url.port)
     request = Net::HTTP::Get.new(url)
