@@ -14,7 +14,7 @@ class ApisController < ApplicationController
   def show
     @city = params[:city]
     puts 'Empieza el request'
-    puts params
+    puts params[:text]
     url = URI("http://api.openweathermap.org/data/2.5/weather?q="+@city+"&APPID=6bdf634eaccfc5088a2d84376170d08b")
     http = Net::HTTP.new(url.host, url.port)
     request = Net::HTTP::Get.new(url)
@@ -22,10 +22,8 @@ class ApisController < ApplicationController
     request["postman-token"] = '2a2e95da-ba53-61b6-5c6a-a6008d6b830b'
     response = http.request(request)
     @oc_array = JSON.parse(response.body)
-    puts @oc_array
     @oc_json = JSON.parse(@oc_array.to_json)
     @datos = @oc_json["weather"][0]["main"]
-    puts @datos
     resp_json = {:data => @datos, :city => @oc_json["name"]}.to_json
     my_hash = JSON.parse(resp_json)
 
