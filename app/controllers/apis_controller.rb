@@ -98,6 +98,7 @@ class ApisController < ApplicationController
       case data['text']
       when 'bot hi' then
         client.message channel: data['channel'], text: "Hi <@#{data['user']}>!"
+
       when /(clima|tiempo)\s(en\s|).*/ then
         indice = data['text'].rindex('en ')
         if indice.nil?
@@ -107,6 +108,8 @@ class ApisController < ApplicationController
           ciudad = data['text'][indice + 3, data['text'].length]
           client.message channel: data['channel'], text: "<@#{data['user']}>, " + consultar(ciudad)
         end
+
+
         
       when /^bot.([j][i]){2,}/ then
         client.message channel: data['channel'], text: "hahaha <@#{data['user']}>"
@@ -117,7 +120,7 @@ class ApisController < ApplicationController
         client.stop!
       end
     end
-
+    client.start!
     #client.stop!
   end
 
