@@ -3,6 +3,9 @@ source 'https://rubygems.org'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '4.2.6'
+gem 'slack-ruby-client'
+
+gem 'celluloid-io', require: ['celluloid/current', 'celluloid/io']
 # Use sqlite3 as the database for Active Record
 
 # Use SCSS for stylesheets
