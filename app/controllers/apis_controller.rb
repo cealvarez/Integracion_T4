@@ -116,6 +116,7 @@ class ApisController < ApplicationController
     end
 
     client.start!
+    client.stop!
   end
 
   # GET /apis/new
