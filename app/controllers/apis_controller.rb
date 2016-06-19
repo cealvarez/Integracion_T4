@@ -58,7 +58,7 @@ class ApisController < ApplicationController
       end
       texto += "\n\n"
     end
-    puts texto
+    return texto
   end
 
   # GET /apis/1
@@ -121,8 +121,8 @@ class ApisController < ApplicationController
 
     client.on :message do |data|
       case data['text']
-      when 'bot hi' then
-        client.message channel: data['channel'], text: "Hi <@#{data['user']}>!"
+      when '/hola/' then
+        client.message channel: data['channel'], text: "Hola <@#{data['user']}>!"
 
       when /(clima|tiempo)\s(en\s|).*/ then
         indice = data['text'].rindex('en ')
@@ -141,7 +141,7 @@ class ApisController < ApplicationController
           client.message channel: data['channel'], text: "<@#{data['user']}> quieres información de algún JUEGO en particular?"
         else
           j = data['text'][indice + 6, data['text'].length]
-          client.message channel: data['channel'], text: "<@#{data['user']}>, " + juegos(j)
+          client.message channel: data['channel'], text: "<@#{data['user']}>, aquí te presento una lista de juegos:\n" + juegos(j)
         end
         
       when /^bot.([j][i]){2,}/ then
