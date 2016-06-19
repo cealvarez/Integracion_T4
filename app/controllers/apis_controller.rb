@@ -99,12 +99,12 @@ class ApisController < ApplicationController
       when 'bot hi' then
         client.message channel: data['channel'], text: "Hi <@#{data['user']}>!"
       when /(clima|tiempo)\s(en\s|).*/ then
-        indice = data['text'].rindex(' ')
+        indice = data['text'].rindex('en ')
         if indice.nil?
           indice = 0
           client.message channel: data['channel'], text: "<@#{data['user']}> quieres el clima de alguna ciudad en particular?"
         else
-          ciudad = data['text'][indice + 1, data['text'].length]
+          ciudad = data['text'][indice + 3, data['text'].length]
           client.message channel: data['channel'], text: "<@#{data['user']}>, " + consultar(ciudad)
         end
         
