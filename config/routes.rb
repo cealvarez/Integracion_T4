@@ -2,6 +2,7 @@ Rails.application.routes.draw do
   resources :apis
 
   get 'api/:city' => 'apis#show' , defaults: {format: :json}
+  post 'api/bye' => 'apis#close' , defaults: {format: :json}
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 

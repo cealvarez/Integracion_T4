@@ -116,7 +116,17 @@ class ApisController < ApplicationController
     end
 
     client.start!
-    client.stop!
+    #client.stop!
+  end
+
+  def close
+     Slack.configure do |config|
+      config.token = 'xoxb-52218480496-tOzPH9igsQHioX08V2JTTqJ0'
+    end
+    client = Slack::RealTime::Client.web_client
+    if client.started?
+      client.stop!
+    end
   end
 
   # GET /apis/new
