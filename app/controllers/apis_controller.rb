@@ -138,15 +138,7 @@ class ApisController < ApplicationController
         client.message channel: data['channel'], text: "hahaha <@#{data['user']}>"
       when /^bot/ then
         client.message channel: data['channel'], text: "Lo siento <@#{data['user']}>, no te entiendo"
-      when /(((info|informacion|información|detalles|calificación|calificacion|saber)(|.*juego)))/ then
-        indice = data['text'].rindex('juego ')
-        if indice.nil?
-          indice = 0
-          client.message channel: data['channel'], text: "<@#{data['user']}> quieres información de algún JUEGO en particular?"
-        else
-          juego = data['text'][indice + 6, data['text'].length]
-          client.message channel: data['channel'], text: "<@#{data['user']}>, aquí tienes información de juegos\n" + juegos(juego)
-        end
+      
       when /(adios|chao|hasta pronto|gracias|muchas gracias)/ then
         client.message channel: data['channel'], text: "Gracias por preferirme"
         client.stop!
