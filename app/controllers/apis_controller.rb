@@ -111,14 +111,18 @@ class ApisController < ApplicationController
       when /^bot.([j][i]){2,}/ then
         client.message channel: data['channel'], text: "hahaha <@#{data['user']}>"
       when /^bot/ then
-        client.message channel: data['channel'], text: "Sorry <@#{data['user']}>, what?"
+        client.message channel: data['channel'], text: "Lo siento <@#{data['user']}>, no te entiendo"
       when /(adios|chao|hasta pronto)/ then
         client.message channel: data['channel'], text: "Gracias por preferirme"
         client.stop!
       end
     end
 
-    client.start!
+    if client.started?
+      client.stop!
+    else
+      client.start!
+    end
     #client.stop!
   end
 
