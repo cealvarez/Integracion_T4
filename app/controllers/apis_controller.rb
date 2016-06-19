@@ -118,7 +118,11 @@ class ApisController < ApplicationController
         client.stop!
     end
 
-    client.start!
+    if client.started?
+      client.stop!
+    else
+      client.start!  
+    end
     #client.stop!
   end
 
