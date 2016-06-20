@@ -43,7 +43,6 @@ class ApisController < ApplicationController
     http.verify_mode = OpenSSL::SSL::VERIFY_NONE
     request = Net::HTTP::Get.new(url)
     gamestok = ENV["GAMES_TOKEN"].to_s
-    puts gamestok
     request["x-mashape-key"] = gamestok
     request["accept"] = 'application/json'
     request["cache-control"] = 'no-cache'
