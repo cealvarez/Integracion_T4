@@ -43,11 +43,13 @@ class ApisController < ApplicationController
     http.verify_mode = OpenSSL::SSL::VERIFY_NONE
     request = Net::HTTP::Get.new(url)
     gamestok = ENV["GAMES_TOKEN"].to_s
+    puts gamestok
     request["x-mashape-key"] = gamestok
     request["accept"] = 'application/json'
     request["cache-control"] = 'no-cache'
     request["postman-token"] = '88bc0b58-c8ce-a7ca-db7c-932eaa70cbc9'
     response = http.request(request)
+    puts response.read_body
     @oc_array = JSON.parse(response.body)
     texto = ''
     @oc_array.each do |game|
