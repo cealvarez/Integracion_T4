@@ -76,7 +76,7 @@ class ApisController < ApplicationController
 
     client.on :message do |data|
       case data['text']
-      when '/(hola|hi)/' then
+      when '/hola|hi/' then
         client.message channel: data['channel'], text: "Hola <@#{data['user']}>!"
 
       when /(clima|tiempo)\s(en\s|).*/ then
