@@ -92,8 +92,13 @@ class ApisController < ApplicationController
       when /(((Información|Info|Informacion|info|informacion|información|detalles|calificación|calificacion|saber)(|.*juego)))/ then
         indice = data['text'].rindex('juego ')
         if indice.nil?
-          indice = 0
-          client.message channel: data['channel'], text: "<@#{data['user']}> quieres información de algún JUEGO en particular?"
+          indice = data['text'].index('de ')
+          if indice.nil?
+            client.message channel: data['channel'], text: "<@#{data['user']}> quieres información de algún JUEGO en particular?"
+          else
+            j = data['text'][indice + 3, data['text'].length]
+            client.message channel: data['channel'], text: "<@#{data['user']}>, aquí te presento una lista de juegos:\n" + juegos(j)
+          end
         else
           j = data['text'][indice + 6, data['text'].length]
           client.message channel: data['channel'], text: "<@#{data['user']}>, aquí te presento una lista de juegos:\n" + juegos(j)
