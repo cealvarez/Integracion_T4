@@ -12,8 +12,8 @@ class ApisController < ApplicationController
 
   def consultar(city)
       @city = city
-      puts 'Empieza el request'
-      url = URI("http://api.openweathermap.org/data/2.5/weather?q="+@city+"&APPID=6bdf634eaccfc5088a2d84376170d08b")
+      weathertok = ENV["WEATHER_TOKEN"]
+      url = URI("http://api.openweathermap.org/data/2.5/weather?q="+@city+"&APPID="+weathertok)
       http = Net::HTTP.new(url.host, url.port)
       request = Net::HTTP::Get.new(url)
       request["cache-control"] = 'no-cache'
@@ -32,7 +32,7 @@ class ApisController < ApplicationController
       elsif @datos == "Rain"
         @datos = "Lluvioso"
       end    
-      texto = "El tiempo en "+@city+": "+@datos
+      texto = "El clima en "+@city+": "+@datos
       return texto
   end
 
@@ -42,7 +42,8 @@ class ApisController < ApplicationController
     http.use_ssl = true
     http.verify_mode = OpenSSL::SSL::VERIFY_NONE
     request = Net::HTTP::Get.new(url)
-    request["x-mashape-key"] = 'zfEvpNOcb8mshz7Xeco6wIN9RPdBp160CByjsn6ct68ijin7So'
+    gamestok = ENV["GAMES_TOKEN"]
+    request["x-mashape-key"] = gamestok
     request["accept"] = 'application/json'
     request["cache-control"] = 'no-cache'
     request["postman-token"] = '88bc0b58-c8ce-a7ca-db7c-932eaa70cbc9'
@@ -61,56 +62,9 @@ class ApisController < ApplicationController
     return texto
   end
 
-  # GET /apis/1
-  # GET /apis/1.json
-=begin
-  def show
-    @city = params[:city]
-    puts 'Empieza el request'
-    @city = params[:text]
-    url = URI("http://api.openweathermap.org/data/2.5/weather?q="+@city+"&APPID=6bdf634eaccfc5088a2d84376170d08b")
-    http = Net::HTTP.new(url.host, url.port)
-    request = Net::HTTP::Get.new(url)
-    request["cache-control"] = 'no-cache'
-    request["postman-token"] = '2a2e95da-ba53-61b6-5c6a-a6008d6b830b'
-    response = http.request(request)
-    @oc_array = JSON.parse(response.body)
-    @oc_json = JSON.parse(@oc_array.to_json)
-    @datos = @oc_json["weather"][0]["main"]
-    resp_json = {:data => @datos, :city => @oc_json["name"]}.to_json
-    my_hash = JSON.parse(resp_json)
-
-    if @datos == "Clear"
-      @datos = "Despejado"
-    elsif @datos == "Clouds"
-      @datos = "Nublado"
-    elsif @datos == "Rain"
-      @datos = "Lluvioso"
-    end    
-
-    url = URI("https://hooks.slack.com/services/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")
-    texto = "El tiempo en "+@city+": "+@datos
-    http = Net::HTTP.new(url.host, url.port)
-    http.use_ssl = true
-    http.verify_mode = OpenSSL::SSL::VERIFY_NONE
-    request = Net::HTTP::Post.new(url)
-    request["cache-control"] = 'no-cache'
-    request["postman-token"] = 'a987c720-123a-a9ec-5dcd-af828ab7d192'
-    request.body = "{\n    \"username\": \"mi primer bot\",\n    \"response_type\": \"ephemeral\",\n    \"text\": \""+ texto +"\"\n}\n"
-    response = http.request(request)
-    #puts response.read_body
-    respond_to do |format|
-      format.html {}
-      format.json { render :json => my_hash}
-      format.js
-    end
-
-  end
-=end
-
   def show
     Slack.configure do |config|
-      config.token = 'xoxb-52218480496-tOzPH9igsQHioX08V2JTTqJ0'
+      config.token = ENV["BOT_TOKEN"]
     end
 
     client = Slack::RealTime::Client.new
@@ -121,7 +75,7 @@ class ApisController < ApplicationController
 
     client.on :message do |data|
       case data['text']
-      when '/hola/' then
+      when '/(hola|hi)/' then
         client.message channel: data['channel'], text: "Hola <@#{data['user']}>!"
 
       when /(clima|tiempo)\s(en\s|).*/ then
@@ -134,7 +88,7 @@ class ApisController < ApplicationController
           client.message channel: data['channel'], text: "<@#{data['user']}>, " + consultar(ciudad)
         end
 
-      when /(((info|informacion|información|detalles|calificación|calificacion|saber)(|.*juego)))/ then
+      when /(((Información|Info|Informacion|info|informacion|información|detalles|calificación|calificacion|saber)(|.*juego)))/ then
         indice = data['text'].rindex('juego ')
         if indice.nil?
           indice = 0
@@ -143,6 +97,9 @@ class ApisController < ApplicationController
           j = data['text'][indice + 6, data['text'].length]
           client.message channel: data['channel'], text: "<@#{data['user']}>, aquí te presento una lista de juegos:\n" + juegos(j)
         end
+
+      when /(juego)/ then
+        client.message channel: data['channel'], text: "<@#{data['user']}> quieres información de algún JUEGO en particular?"
         
       when /^bot.([j][i]){2,}/ then
         client.message channel: data['channel'], text: "hahaha <@#{data['user']}>"
@@ -159,7 +116,7 @@ class ApisController < ApplicationController
 
   def close
      Slack.configure do |config|
-      config.token = 'xoxb-52218480496-tOzPH9igsQHioX08V2JTTqJ0'
+      config.token = ENV["BOT_TOKEN"]
     end
     client = Slack::RealTime::Client.web_client
     if client.started?
